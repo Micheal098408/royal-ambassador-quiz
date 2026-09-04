@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Royal Ambassador Quiz</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="quiz-container">
+
+        <div id="start-screen">
+            <h1>Royal Ambassador Quiz</h1>
+            <p>Test your Bible and Royal Ambassador knowledge.</p>
+            <button id="start-btn">Start Quiz</button>
+        </div>
+
+        <div id="quiz-screen" class="hidden">
+
+            <div class="quiz-header">
+                <span id="question-number">Question 1 of 20</span>
+                <span id="score">Score: 0</span>
+            </div>
+
+            <div class="progress-container">
+                <div id="progress-bar"></div>
+            </div>
+
+            <h2 id="question">Loading question...</h2>
+
+            <div id="answers">
+                <button class="answer-btn" data-option="optionA"></button>
+                <button class="answer-btn" data-option="optionB"></button>
+                <button class="answer-btn" data-option="optionC"></button>
+                <button class="answer-btn" data-option="optionD"></button>
+            </div>
+
+            <button id="next-btn" class="hidden">Next Question</button>
+
+        </div>
+
+        <div id="result-screen" class="hidden">
+            <h1>Quiz Complete!</h1>
+
+            <p id="final-score"></p>
+
+            <button id="restart-btn">Play Again</button>
+        </div>
+
+    </div>
+
+    <script type="module" src="script.js"></script>
+
+</body>
+</html>

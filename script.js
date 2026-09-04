@@ -12,11 +12,11 @@ import {
 
 
 // ==========================================
-// YOUR FIREBASE CONFIGURATION
+// FIREBASE CONFIGURATION
 // ==========================================
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDDvF-IToSSARRUYImRBh9X17jvxRt2Pug",
+    apiKey: "AIzaSyDDvF-IToSSARRUYImRBah9X17jvxRt2Pug",
     authDomain: "royal-ambassador-quiz.firebaseapp.com",
     projectId: "royal-ambassador-quiz",
     storageBucket: "royal-ambassador-quiz.firebasestorage.app",
@@ -31,7 +31,6 @@ const firebaseConfig = {
 // ==========================================
 
 const app = initializeApp(firebaseConfig);
-
 const db = getFirestore(app);
 
 
@@ -40,51 +39,29 @@ const db = getFirestore(app);
 // ==========================================
 
 let questions = [];
-
 let currentQuestion = 0;
-
 let score = 0;
 
 
 // ==========================================
-// GET ELEMENTS FROM index.html
+// GET HTML ELEMENTS
 // ==========================================
 
-const startScreen =
-    document.getElementById("start-screen");
+const startScreen = document.getElementById("start-screen");
+const quizScreen = document.getElementById("quiz-screen");
+const resultScreen = document.getElementById("result-screen");
 
-const quizScreen =
-    document.getElementById("quiz-screen");
+const startButton = document.getElementById("start-btn");
+const nextButton = document.getElementById("next-btn");
+const restartButton = document.getElementById("restart-btn");
 
-const resultScreen =
-    document.getElementById("result-screen");
+const questionText = document.getElementById("question");
+const questionNumber = document.getElementById("question-number");
+const scoreText = document.getElementById("score");
+const finalScore = document.getElementById("final-score");
+const progressBar = document.getElementById("progress-bar");
 
-const startButton =
-    document.getElementById("start-btn");
-
-const nextButton =
-    document.getElementById("next-btn");
-
-const restartButton =
-    document.getElementById("restart-btn");
-
-const questionText =
-    document.getElementById("question");
-
-const questionNumber =
-    document.getElementById("question-number");
-
-const scoreText =
-    document.getElementById("score");
-
-const finalScore =
-    document.getElementById("final-score");
-
-const progressBar =
-    document.getElementById("progress-bar");
-
-const answerButtons =
-    document.querySelectorAll(".answer-btn");
+const answerButtons = document.querySelectorAll(".answer-btn");
 
 
 // ==========================================
@@ -105,20 +82,24 @@ async function loadQuestions() {
 
         snapshot.forEach((doc) => {
 
+            const data = doc.data();
+
             questions.push({
                 id: doc.id,
-                ...doc.data()
+                ...data
             });
 
         });
 
-        console.log(
-            "Questions loaded:",
-            questions
-        );
+        console.log("Questions loaded:", questions);
 
+
+        // Check if questions exist
 
         if (questions.length === 0) {
+
+            questionText.textContent =
+                "No questions were found.";
 
             alert(
                 "No questions were found in Firebase."
@@ -139,10 +120,15 @@ async function loadQuestions() {
             error
         );
 
+        questionText.textContent =
+            "Could not load questions.";
+
         alert(
             "Could not load questions from Firebase. Check your Firestore rules and collection name."
         );
+
     }
+
 }
 
 
@@ -165,7 +151,6 @@ startButton.addEventListener(
 
 
         currentQuestion = 0;
-
         score = 0;
 
 
@@ -204,21 +189,63 @@ function showQuestion() {
         questions[currentQuestion];
 
 
-    questionText.textContent =
-        question.question;
+    // ======================================
+    // GET QUESTION TEXT
+    // ======================================
 
+    const questionValue =
+        question.question ||
+        question.Question ||
+        question.questions ||
+        question.QUESTION ||
+        "";
+
+
+    if (questionValue) {
+
+        questionText.textContent =
+            questionValue;
+
+    } else {
+
+        questionText.textContent =
+            "Question text is missing from this question.";
+
+        console.warn(
+            "Question field not found:",
+            question
+        );
+
+    }
+
+
+    // ======================================
+    // QUESTION NUMBER
+    // ======================================
 
     questionNumber.textContent =
         `Question ${currentQuestion + 1} of ${questions.length}`;
 
 
+    // ======================================
+    // SCORE
+    // ======================================
+
     scoreText.textContent =
         `Score: ${score}`;
 
 
+    // ======================================
+    // PROGRESS BAR
+    // ======================================
+
     progressBar.style.width =
         `${((currentQuestion + 1) / questions.length) * 100}%`;
 
+
+    // ======================================
+    // ANSWER BUTTONS
+    // ======================================
 
     answerButtons.forEach(
         (button) => {
@@ -228,7 +255,7 @@ function showQuestion() {
 
 
             button.textContent =
-                question[optionName];
+                question[optionName] || "";
 
 
             button.disabled = false;
@@ -247,9 +274,12 @@ function showQuestion() {
     );
 
 
+    // Hide Next button
+
     nextButton.classList.add(
         "hidden"
     );
+
 }
 
 
@@ -265,12 +295,16 @@ answerButtons.forEach(
             function () {
 
                 const selectedAnswer =
-                    this.textContent;
+                    this.textContent.trim();
 
 
                 const correctAnswer =
-                    questions[currentQuestion].answer;
+                    String(
+                        questions[currentQuestion].answer || ""
+                    ).trim();
 
+
+                // Disable all answers
 
                 answerButtons.forEach(
                     (btn) => {
@@ -278,9 +312,11 @@ answerButtons.forEach(
                         btn.disabled = true;
 
 
+                        // Show correct answer
+
                         if (
                             btn.textContent.trim() ===
-                            correctAnswer.trim()
+                            correctAnswer
                         ) {
 
                             btn.classList.add(
@@ -293,12 +329,15 @@ answerButtons.forEach(
                 );
 
 
+                // Check selected answer
+
                 if (
-                    selectedAnswer.trim() ===
-                    correctAnswer.trim()
+                    selectedAnswer ===
+                    correctAnswer
                 ) {
 
                     score++;
+
 
                     this.classList.add(
                         "correct"
@@ -313,9 +352,13 @@ answerButtons.forEach(
                 }
 
 
+                // Update score
+
                 scoreText.textContent =
                     `Score: ${score}`;
 
+
+                // Show Next button
 
                 nextButton.classList.remove(
                     "hidden"
@@ -357,7 +400,7 @@ nextButton.addEventListener(
 
 
 // ==========================================
-// SHOW FINAL SCORE
+// SHOW RESULTS
 // ==========================================
 
 function showResults() {
@@ -387,7 +430,6 @@ restartButton.addEventListener(
     function () {
 
         currentQuestion = 0;
-
         score = 0;
 
 
@@ -399,6 +441,10 @@ restartButton.addEventListener(
         quizScreen.classList.remove(
             "hidden"
         );
+
+
+        scoreText.textContent =
+            "Score: 0";
 
 
         showQuestion();

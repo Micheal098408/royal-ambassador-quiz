@@ -1,0 +1,142 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f2f5f9;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.quiz-container {
+    background: white;
+    width: 100%;
+    max-width: 650px;
+    padding: 35px;
+    border-radius: 18px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    text-align: center;
+}
+
+h1 {
+    font-size: 36px;
+    margin-bottom: 15px;
+}
+
+p {
+    font-size: 18px;
+    margin-bottom: 25px;
+    color: #555;
+}
+
+button {
+    border: none;
+    border-radius: 10px;
+    padding: 15px 22px;
+    font-size: 17px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+#start-btn,
+#next-btn,
+#restart-btn {
+    background: #1565c0;
+    color: white;
+}
+
+#start-btn:hover,
+#next-btn:hover,
+#restart-btn:hover {
+    opacity: 0.85;
+}
+
+.quiz-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.progress-container {
+    width: 100%;
+    height: 10px;
+    background: #ddd;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    overflow: hidden;
+}
+
+#progress-bar {
+    height: 100%;
+    width: 0%;
+    transition: width 0.3s;
+}
+
+#question {
+    font-size: 25px;
+    margin-bottom: 25px;
+}
+
+#answers {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.answer-btn {
+    width: 100%;
+    background: #eeeeee;
+    text-align: left;
+}
+
+.answer-btn:hover {
+    background: #dddddd;
+}
+
+.answer-btn.correct {
+    background: #2e7d32;
+    color: white;
+}
+
+.answer-btn.wrong {
+    background: #c62828;
+    color: white;
+}
+
+.answer-btn:disabled {
+    cursor: not-allowed;
+}
+
+#next-btn {
+    margin-top: 25px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+@media (max-width: 600px) {
+
+    .quiz-container {
+        padding: 25px 18px;
+    }
+
+    h1 {
+        font-size: 28px;
+    }
+
+    #question {
+        font-size: 21px;
+    }
+
+    .quiz-header {
+        font-size: 14px;
+    }
+}
